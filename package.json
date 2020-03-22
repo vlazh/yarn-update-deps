@@ -45,7 +45,7 @@
     "dependencies"
   ],
   "scripts": {
-    "clean": "rimraf dist/*",
+    "clean": "rimraf out/*",
     "vscode:prepublish": "yarn run clean && yarn run compile",
     "compile": "tsc -p ./",
     "lint": "eslint src --ext ts",
