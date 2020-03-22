@@ -1,0 +1,67 @@
+{
+  "name": "yarn-update-deps",
+  "displayName": "yarn-update-deps",
+  "description": "Interactive update packages",
+  "version": "0.0.1",
+  "license": "MIT",
+  "publisher": "vlazh",
+  "author": "Vladimir Zhukov",
+  "maintainers": [
+    {
+      "name": "Vladimir Zhukov",
+      "url": "http://github.com/vlazh"
+    }
+  ],
+  "engines": {
+    "vscode": "^1.43.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:extension.update-deps"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "title": "Update deps",
+        "category": "Yarn",
+        "command": "extension.update-deps"
+      }
+    ]
+  },
+  "homepage": "https://github.com/vlazh/yarn-update-deps",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vlazh/yarn-update-deps"
+  },
+  "keywords": [
+    "yarn",
+    "update",
+    "upgrade",
+    "dependencies"
+  ],
+  "scripts": {
+    "clean": "rimraf dist/*",
+    "vscode:prepublish": "yarn run clean && yarn run compile",
+    "compile": "tsc -p ./",
+    "lint": "eslint src --ext ts",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.43.0",
+    "@typescript-eslint/eslint-plugin": "^2.18.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "@vzh/configs": "^3.44.1",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^2.0.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.7.5"
+  }
+}
