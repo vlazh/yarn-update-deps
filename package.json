@@ -1,6 +1,6 @@
 {
   "name": "yarn-update-deps",
-  "displayName": "yarn-update-deps",
+  "displayName": "Yarn update deps",
   "description": "Interactive update packages",
   "version": "0.0.1",
   "license": "MIT",
@@ -31,6 +31,7 @@
       }
     ]
   },
+  "icon": "yarn_icon.png",
   "homepage": "https://github.com/vlazh/yarn-update-deps",
   "repository": {
     "type": "git",
