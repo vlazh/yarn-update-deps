@@ -2,7 +2,7 @@
   "name": "yarn-update-deps",
   "displayName": "Yarn update deps",
   "description": "Interactive update dependencies",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "publisher": "vlazh",
   "author": "Vladimir Zhukov",
