@@ -1,3 +1,7 @@
-# yarn-update-deps README
+# Yarn update deps
 
-Run `yarn upgrade-interactive --latest`
+### Commands:
+
+This extension contributes the following commands to the Command palette.
+
+- `Yarn: Update deps`: runs `yarn upgrade-interactive --latest`.
