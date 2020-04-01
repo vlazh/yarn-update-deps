@@ -2,6 +2,8 @@
 // Import the module and reference it with the alias vscode in your code below
 // eslint-disable-next-line import/no-unresolved
 import * as vscode from 'vscode';
+import fs from 'fs';
+import path from 'path';
 
 function showError(message: string): void {
   vscode.window.showErrorMessage(`Yarn update-deps: ${message}`);
@@ -49,15 +51,17 @@ export function activate(context: vscode.ExtensionContext): void {
 
     // If in a multifolder workspace, prompt user to select which one to traverse.
     if (workspaceFolders.length > 1) {
-      vscode.window
-        .showQuickPick(
-          workspaceFolders.map((folder) => ({ label: folder.name, folder })),
-          { placeHolder: 'Select workspace folder' }
+      const folders = new Promise<{ label: string; folder: vscode.WorkspaceFolder }[]>((resolve) =>
+        resolve(
+          workspaceFolders
+            .filter((folder) => fs.existsSync(path.join(folder.uri.fsPath, 'package.json')))
+            .map((folder) => ({ label: folder.name, folder }))
         )
-        .then(
-          (selected) => selected && runCommand(selected.folder),
-          (err) => showError(err.toString())
-        );
+      );
+      vscode.window.showQuickPick(folders, { placeHolder: 'Select workspace folder' }).then(
+        (selected) => selected && runCommand(selected.folder),
+        (err) => showError(err.toString())
+      );
     } else {
       // Otherwise, use the first one
       const folder = workspaceFolders[0];
