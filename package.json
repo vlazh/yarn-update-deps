@@ -50,7 +50,10 @@
     "compile": "tsc -p ./",
     "lint": "eslint src --ext ts",
     "watch": "tsc -watch -p ./",
-    "pretest": "yarn run compile && yarn run lint"
+    "pretest": "yarn run compile && yarn run lint",
+    "publish:major": "vsce publish major",
+    "publish:minor": "vsce publish minor",
+    "publish:patch": "vsce publish patch"
   },
   "devDependencies": {
     "@types/node": "^13.9.8",
