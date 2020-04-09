@@ -38,7 +38,7 @@ export function activate(context: vscode.ExtensionContext): void {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  const disposable = vscode.commands.registerCommand('extension.update-deps', () => {
+  const disposable = vscode.commands.registerCommand('extension.update-deps', async () => {
     // The code you place here will be executed every time your command is executed
 
     const workspaceFolders = vscode.workspace.workspaceFolders ?? [];
@@ -49,14 +49,24 @@ export function activate(context: vscode.ExtensionContext): void {
       return;
     }
 
-    // If in a multifolder workspace, prompt user to select which one to traverse.
-    if (workspaceFolders.length > 1) {
-      const folders = new Promise<{ label: string; folder: vscode.WorkspaceFolder }[]>((resolve) =>
-        resolve(
-          workspaceFolders
-            .filter((folder) => fs.existsSync(path.join(folder.uri.fsPath, 'package.json')))
-            .map((folder) => ({ label: folder.name, folder }))
+    const filteredFolders = await new Promise<vscode.WorkspaceFolder[]>((resolve) =>
+      resolve(
+        workspaceFolders.filter((folder) =>
+          fs.existsSync(path.join(folder.uri.fsPath, 'package.json'))
         )
+      )
+    );
+
+    // Must have at least one workspace folder with package.json
+    if (workspaceFolders.length === 0) {
+      showError('You must have a workspace opened with existing package.json.');
+      return;
+    }
+
+    // If in a multifolder workspace, prompt user to select which one to choose.
+    if (filteredFolders.length > 1) {
+      const folders = new Promise<{ label: string; folder: vscode.WorkspaceFolder }[]>((resolve) =>
+        resolve(filteredFolders.map((folder) => ({ label: folder.name, folder })))
       );
       vscode.window.showQuickPick(folders, { placeHolder: 'Select workspace folder' }).then(
         (selected) => selected && runCommand(selected.folder),
@@ -64,7 +74,7 @@ export function activate(context: vscode.ExtensionContext): void {
       );
     } else {
       // Otherwise, use the first one
-      const folder = workspaceFolders[0];
+      const folder = filteredFolders[0];
       runCommand(folder);
     }
   });
