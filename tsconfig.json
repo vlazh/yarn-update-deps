@@ -4,7 +4,8 @@
 		"outDir": "out",
 		"sourceMap": true,
 		"rootDir": "src",
-		"target": "ES6"
+		"target": "ES6",
+		"incremental": false
 	},
 	"exclude": [
 		"node_modules",
