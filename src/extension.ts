@@ -4,12 +4,20 @@
 import * as vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
+import { execSync } from 'child_process';
 
 function showError(message: string): void {
-  vscode.window.showErrorMessage(`Yarn update-deps: ${message}`);
+  void vscode.window.showErrorMessage(`Yarn update-deps: ${message}`);
 }
 
 function runCommand(workspace: vscode.WorkspaceFolder): void {
+  const result = execSync('yarn --version', { cwd: workspace.uri.path });
+  const version = result.toString();
+
+  const cliCommand = version.startsWith('1')
+    ? 'yarn upgrade-interactive --latest'
+    : 'yarn upgrade-interactive';
+
   const task: vscode.Task = new vscode.Task(
     { type: 'yarn' },
     workspace,
@@ -18,7 +26,7 @@ function runCommand(workspace: vscode.WorkspaceFolder): void {
     new vscode.ShellExecution(
       // https://misc.flogisoft.com/bash/tip_colors_and_formatting
       // eslint-disable-next-line no-template-curly-in-string
-      "echo -e '\\e[1;97;100m Run update-deps for \\e[102m ${workspaceFolderBasename} \\e[0m\n' && yarn upgrade-interactive --latest"
+      `echo -e '\\e[1;97;100m Run update-deps for \\e[102m \${workspaceFolderBasename} \\e[0m\n' && ${cliCommand}`
     )
   );
   task.isBackground = false;
@@ -26,7 +34,7 @@ function runCommand(workspace: vscode.WorkspaceFolder): void {
   task.presentationOptions.focus = true;
   task.runOptions.reevaluateOnRerun = true;
 
-  vscode.tasks.executeTask(task).then(undefined, (err) => {
+  vscode.tasks.executeTask(task).then(undefined, (err: Error) => {
     console.error(err);
     showError(err.toString());
   });
@@ -70,7 +78,7 @@ export function activate(context: vscode.ExtensionContext): void {
       );
       vscode.window.showQuickPick(folders, { placeHolder: 'Select workspace folder' }).then(
         (selected) => selected && runCommand(selected.folder),
-        (err) => showError(err.toString())
+        (err: Error) => showError(err.toString())
       );
     } else {
       // Otherwise, use the first one
