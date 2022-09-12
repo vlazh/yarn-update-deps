@@ -20,7 +20,8 @@
   ],
   "activationEvents": [
     "onCommand:yarn-update-deps.update-deps",
-    "onCommand:yarn-update-deps.update-yarn"
+    "onCommand:yarn-update-deps.update-yarn",
+    "onCommand:yarn-update-deps.dedupe"
   ],
   "main": "./out/extension.js",
   "contributes": {
