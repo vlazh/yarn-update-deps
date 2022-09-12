@@ -122,8 +122,20 @@ export function activate(context: vscode.ExtensionContext): void {
     }
   );
 
+  const dedupeCommand = vscode.commands.registerCommand('yarn-update-deps.dedupe', async () => {
+    // The code you place here will be executed every time your command is executed
+    await selectFolderAndRun((folder) => {
+      const result = execSync('yarn --version', { cwd: folder.uri.path });
+      const version = result.toString();
+      if (version.startsWith('1')) throw new Error('The command only supports Yarn version >= 2.');
+      const cmd = 'yarn dedupe';
+      return { cmd, name: 'dedupe' };
+    });
+  });
+
   context.subscriptions.push(updateDepsCommand);
   context.subscriptions.push(updateYarnCommand);
+  context.subscriptions.push(dedupeCommand);
 }
 
 // this method is called when your extension is deactivated
