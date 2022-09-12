@@ -34,6 +34,11 @@
         "title": "Update Yarn",
         "category": "Yarn",
         "command": "yarn-update-deps.update-yarn"
+      },
+      {
+        "title": "Dedupe",
+        "category": "Yarn",
+        "command": "yarn-update-deps.dedupe"
       }
     ]
   },
