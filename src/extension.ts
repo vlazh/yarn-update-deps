@@ -22,7 +22,7 @@ function runCommand(cliCommand: CliCommand, workspace: vscode.WorkspaceFolder): 
     'yarn',
     new vscode.ShellExecution(
       // https://misc.flogisoft.com/bash/tip_colors_and_formatting
-      `echo -e '\\e[1;97;100m Run update-deps for \\e[102m \${workspaceFolderBasename} \\e[0m\n' && ${cliCommand.cmd}`
+      `echo -e '\\e[1;97;100m Run ${cliCommand.name} for \\e[102m \${workspaceFolderBasename} \\e[0m\n' && ${cliCommand.cmd}`
     )
   );
   task.isBackground = false;
@@ -102,7 +102,7 @@ export function activate(context: vscode.ExtensionContext): void {
         const cmd = version.startsWith('1')
           ? 'yarn upgrade-interactive --latest'
           : 'yarn upgrade-interactive';
-        return { cmd, name: 'update-deps' };
+        return { cmd, name: 'Update Deps' };
       });
     }
   );
@@ -117,7 +117,7 @@ export function activate(context: vscode.ExtensionContext): void {
         if (version.startsWith('1'))
           throw new Error('The command only supports Yarn version >= 2.');
         const cmd = 'yarn set version stable';
-        return { cmd, name: 'update-yarn' };
+        return { cmd, name: 'Update Yarn' };
       });
     }
   );
@@ -129,7 +129,7 @@ export function activate(context: vscode.ExtensionContext): void {
       const version = result.toString();
       if (version.startsWith('1')) throw new Error('The command only supports Yarn version >= 2.');
       const cmd = 'yarn dedupe';
-      return { cmd, name: 'dedupe' };
+      return { cmd, name: 'Dedupe' };
     });
   });
 
