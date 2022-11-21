@@ -27,7 +27,7 @@
   "contributes": {
     "commands": [
       {
-        "title": "Update deps",
+        "title": "Update Deps",
         "category": "Yarn",
         "command": "yarn-update-deps.update-deps"
       },
@@ -70,18 +70,18 @@
   },
   "devDependencies": {
     "@js-toolkit/configs": "^3.84.4",
-    "@types/node": "^18.7.16",
+    "@types/node": "^18.11.9",
     "@types/vscode": "^1.55.0",
-    "@typescript-eslint/eslint-plugin": "^5.36.2",
-    "@typescript-eslint/parser": "^5.36.2",
-    "eslint": "^8.23.0",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
+    "eslint": "^8.28.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
-    "typescript": "^4.8.3",
+    "typescript": "^4.9.3",
     "vsce": "^2.11.0"
   }
 }
