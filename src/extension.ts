@@ -10,8 +10,9 @@ interface CliCommand {
   readonly name: string;
 }
 
-function showError(message: string): void {
-  void vscode.window.showErrorMessage(`Yarn: ${message}`);
+function showError(error: unknown): void {
+  console.error(error);
+  void vscode.window.showErrorMessage(`Yarn: ${String(error)}`);
 }
 
 function runCommand(cliCommand: CliCommand, workspace: vscode.WorkspaceFolder): void {
@@ -30,10 +31,7 @@ function runCommand(cliCommand: CliCommand, workspace: vscode.WorkspaceFolder): 
   task.presentationOptions.focus = true;
   task.runOptions.reevaluateOnRerun = true;
 
-  vscode.tasks.executeTask(task).then(undefined, (err: Error) => {
-    console.error(err);
-    showError(err.toString());
-  });
+  vscode.tasks.executeTask(task).then(undefined, showError);
 }
 
 async function selectFolderAndRun(
@@ -73,16 +71,16 @@ async function selectFolderAndRun(
         .showQuickPick(folders, { placeHolder: 'Select workspace folder' })
         .then(
           (selected) => selected && runCommand(getCliCommand(selected.folder), selected.folder),
-          (err: Error) => showError(err.toString())
+          showError
         )
-        .then(undefined, (err: Error) => showError(err.toString()));
+        .then(undefined, showError);
     } else {
       // Otherwise, use the first one
       const folder = filteredFolders[0];
       runCommand(getCliCommand(folder), folder);
     }
   } catch (ex) {
-    showError(String(ex));
+    showError(ex);
   }
 }
 
