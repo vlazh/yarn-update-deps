@@ -5,6 +5,8 @@
     "sourceMap": true,
     "rootDir": "src",
     "target": "ES6",
+    "module": "commonjs",
+    "verbatimModuleSyntax": false,
     "incremental": false,
     "importHelpers": false
   },
