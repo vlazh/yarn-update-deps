@@ -11,7 +11,7 @@ interface CliCommand {
 }
 
 function showError(message: string): void {
-  void vscode.window.showErrorMessage(`Yarn update-deps: ${message}`);
+  void vscode.window.showErrorMessage(`Yarn: ${message}`);
 }
 
 function runCommand(cliCommand: CliCommand, workspace: vscode.WorkspaceFolder): void {
@@ -86,6 +86,11 @@ async function selectFolderAndRun(
   }
 }
 
+function getYarnVersion(folder: vscode.WorkspaceFolder): string {
+  const result = execSync('yarn --version', { cwd: folder.uri.path });
+  return result.toString();
+}
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext): void {
@@ -97,8 +102,7 @@ export function activate(context: vscode.ExtensionContext): void {
     async () => {
       // The code you place here will be executed every time your command is executed
       await selectFolderAndRun((folder) => {
-        const result = execSync('yarn --version', { cwd: folder.uri.path });
-        const version = result.toString();
+        const version = getYarnVersion(folder);
         const cmd = version.startsWith('1')
           ? 'yarn upgrade-interactive --latest'
           : 'yarn upgrade-interactive';
@@ -112,8 +116,7 @@ export function activate(context: vscode.ExtensionContext): void {
     async () => {
       // The code you place here will be executed every time your command is executed
       await selectFolderAndRun((folder) => {
-        const result = execSync('yarn --version', { cwd: folder.uri.path });
-        const version = result.toString();
+        const version = getYarnVersion(folder);
         if (version.startsWith('1'))
           throw new Error('The command only supports Yarn version >= 2.');
         const cmd = 'yarn set version stable';
@@ -125,17 +128,31 @@ export function activate(context: vscode.ExtensionContext): void {
   const dedupeCommand = vscode.commands.registerCommand('yarn-update-deps.dedupe', async () => {
     // The code you place here will be executed every time your command is executed
     await selectFolderAndRun((folder) => {
-      const result = execSync('yarn --version', { cwd: folder.uri.path });
-      const version = result.toString();
+      const version = getYarnVersion(folder);
       if (version.startsWith('1')) throw new Error('The command only supports Yarn version >= 2.');
       const cmd = 'yarn dedupe';
       return { cmd, name: 'Dedupe' };
     });
   });
 
+  const migrateVersionCommand = vscode.commands.registerCommand(
+    'yarn-update-deps.migrate-version',
+    async () => {
+      // The code you place here will be executed every time your command is executed
+      await selectFolderAndRun((folder) => {
+        const version = getYarnVersion(folder);
+        if (!version.startsWith('1'))
+          throw new Error(`Yarn version (${version}) is already migrated.`);
+        const cmd = 'yarn set version berry';
+        return { cmd, name: 'Migrate Yarn Version to Berry' };
+      });
+    }
+  );
+
   context.subscriptions.push(updateDepsCommand);
   context.subscriptions.push(updateYarnCommand);
   context.subscriptions.push(dedupeCommand);
+  context.subscriptions.push(migrateVersionCommand);
 }
 
 // this method is called when your extension is deactivated
