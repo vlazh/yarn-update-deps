@@ -1,5 +1,7 @@
 # Yarn update deps
 
+[VS Code extension](https://marketplace.visualstudio.com/items?itemName=vlazh.yarn-update-deps)
+
 ### Commands:
 
 This extension contributes the following commands to the Command palette.
